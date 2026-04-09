@@ -46,9 +46,17 @@
       padding: 36px 18px;
     }
 
-    .page {
+    .page-shell {
       width: max(var(--page-min), var(--page-width));
       max-width: 92vw;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 14px;
+    }
+
+    .page {
+      width: 100%;
       height: calc(100vh - 72px);
       height: var(--page-height);
       min-height: min(700px, var(--page-height));
@@ -67,6 +75,21 @@
       display: none;
       width: 0;
       height: 0;
+    }
+
+    .site-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 0 0 2px;
+    }
+
+    .footer-mark {
+      display: block;
+      width: 54px;   /* change size here */
+      height: auto;
+      opacity: 0.95; /* change opacity here */
     }
 
     .chrome {
@@ -228,14 +251,23 @@
         padding: 12px;
       }
 
-      .page {
+      .page-shell {
         width: var(--page-width);
         max-width: var(--page-width);
+      }
+
+      .page {
+        width: 100%;
+        max-width: 100%;
         min-height: var(--page-height);
       }
 
       .poem { max-width: 82%; }
       .bio { width: 52%; }
+
+      .footer-mark {
+        width: 48px;
+      }
     }
 
     @media (max-width: 640px) {
@@ -276,11 +308,25 @@
       .work-bottom {
         margin-top: 92px;
       }
+
+      .footer-mark {
+        width: 42px;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="page" id="app"></main>
+  <div class="page-shell">
+    <main class="page" id="app"></main>
+
+    <footer class="site-footer" aria-hidden="true">
+      <img
+        class="footer-mark"
+        src="Untitled design (22).png"
+        alt=""
+      />
+    </footer>
+  </div>
 
   <script>
     /*
