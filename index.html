@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Juliet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #050505;
@@ -15,17 +18,18 @@
       --line: 1.18;
       --page-width: min(40vw, 620px);
       --page-min: 520px;
-      --page-height: calc(100vh - 72px);
+      --page-height: calc(100dvh - 72px);
       --pad-x: 22px;
       --pad-y: 20px;
 
       /* CHANGE FONT HERE */
-      --font-main: "Baskerville", "Times New Roman", serif;
+      --font-main: "Libre Baskerville", Baskerville, Georgia, serif;
     }
 
     * { box-sizing: border-box; }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       min-height: 100%;
       background: var(--bg);
@@ -36,6 +40,7 @@
     }
 
     body {
+      min-height: 100dvh;
       display: flex;
       justify-content: center;
       padding: 36px 18px;
@@ -44,18 +49,25 @@
     .page {
       width: max(var(--page-min), var(--page-width));
       max-width: 92vw;
+      height: calc(100vh - 72px);
       height: var(--page-height);
-      min-height: 700px;
+      min-height: min(700px, var(--page-height));
       background: var(--paper);
       overflow-y: auto;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
       padding: var(--pad-y) var(--pad-x) 18px;
       position: relative;
-      scrollbar-width: thin;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
-    .page::-webkit-scrollbar { width: 7px; }
-    .page::-webkit-scrollbar-thumb { background: rgba(0,0,0,.25); }
+    .page::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
 
     .chrome {
       display: flex;
@@ -71,6 +83,8 @@
       gap: 10px;
       justify-content: flex-end;
       min-width: 120px;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
 
     .star-link,
@@ -100,7 +114,8 @@
     .work-title,
     .work-nav,
     .plain-text,
-    .archive-season {
+    .archive-season,
+    .archive-copy {
       font-size: var(--body1);
       line-height: var(--line);
       font-weight: 400;
@@ -200,14 +215,23 @@
 
     @media (max-width: 980px) {
       :root {
-        --page-width: 86vw;
+        --page-width: calc(100vw - 24px);
         --page-min: 0px;
+        --page-height: calc(100dvh - 24px);
         --body1: 18px;
         --body2: 15px;
+        --pad-x: 18px;
+        --pad-y: 18px;
+      }
+
+      body {
+        padding: 12px;
       }
 
       .page {
-        min-height: 78vh;
+        width: var(--page-width);
+        max-width: var(--page-width);
+        min-height: var(--page-height);
       }
 
       .poem { max-width: 82%; }
@@ -215,14 +239,26 @@
     }
 
     @media (max-width: 640px) {
-      body { padding: 16px 10px; }
+      body { padding: 8px; }
+
       :root {
+        --page-width: calc(100vw - 16px);
+        --page-height: calc(100dvh - 16px);
         --body1: 17px;
         --body2: 14px;
+        --pad-x: 14px;
+        --pad-y: 14px;
       }
+
       .chrome {
-        margin-bottom: 88px;
+        margin-bottom: 72px;
+        gap: 14px;
       }
+
+      .brand-wrap {
+        min-width: 0;
+      }
+
       .poem,
       .bio,
       .archive-list,
@@ -231,7 +267,15 @@
         max-width: 100%;
         width: 100%;
       }
-      .bio { margin-left: 0; }
+
+      .bio {
+        margin-left: 0;
+        margin-top: 36px;
+      }
+
+      .work-bottom {
+        margin-top: 92px;
+      }
     }
   </style>
 </head>
@@ -259,53 +303,46 @@
       - Add new seasonal groups, rename them, or remove them.
     */
 
-    const site = {
+    const content = {
       title: "Juliet",
       current: "hua-xi",
       about: "Juliet is a journal of writing, publishing poetry and prose. We publish on a rolling basis. This project is inspired by friends.",
       editors: "Editors. Andrew Kang, Daniel Liu.",
       submissions: "Please email your submission to juliet@gmail.com, including your name, a short biography, and either one to three poems or one work of prose, in one .docx file.",
-
       archive: [
         {
           season: "Spring 2026",
-          works: ["hua-xi", "aria-aber"]
+          items: ["hua-xi", "aria-aber"]
         }
       ],
-
-      works: [
-        {
+      works: {
+        "hua-xi": {
           slug: "hua-xi",
           author: "Hua Xi",
           title: "Lightning Field",
           epigraph: "after The Lightning Field, by Walter de Maria (New Mexico) 1977",
           text: `It’s death outside\nbut each passing headlight\nis a howl through the canyons.\nThe universe makes a thousand copies of everything:\nflat scrub grass, sawtooth mountains\npaper bag bush\nand the desert woolly star.\nReminds me of leaving the office,\nthe mirage of one last coworker headed to his car\nin the violet after hours,\nin the way out there,\na blemish on the face of the moon.\nHere I have my little life,\nentering numbers into a spreadsheet,\nboundless scrolling\nthrough the twinkling, untilled field,\nso the cells can conduct electricity\nand a flash of people kissing, chatting, staying up at night\ncan pass through the air.\nOut there, \nonly metal can pierce the sky without dying,\nwhich I guess really means that\nonly objects may receive a violence\nso vast as to be beautiful.`,
-          bio: `Hua Xi is a writer and artist and occasional art critic. Their work has appeared in American Poetry Review, The Nation and Boston Review. They love the sky. Twitter/Insta: @huaxixyz`
+          bio: `Hua Xi is a writer and artist and occasional art critic. Their work has appeared in American Poetry Review, The Nation and Boston Review. They love the sky. Twitter/Insta: @huaxixyz`,
+          next: "aria-aber"
         },
-        {
+        "aria-aber": {
           slug: "aria-aber",
           author: "Aria Aber",
           title: "Mother of All Balms",
-          epigraph: "",
+          epigraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
           text: `Morning she comes, mother of all balms.\n\nOnly the news reporter says it wrong:\nbut aren’t you strung: little ping\n\nand doesn’t memory embalm\n          your most-hurt city:\n\nthose yellow creeks                    of your rickety holm\nwhere your mater: your salve:\n\nleft all her selves behind\nso she could surrender to a lifetime\n\nof Septembering: what she members most:\n\nyellow grapes and celeries\nand visiting her father’s glove\n\na balm, to be by absence so enclaved:\n\nyour mender\na follower, devoted\n\nto what she cannot see. O air miles,\nhow can it be real?\n\nHow uncertain you should\nbe          if it existed, if there are no photos left\n\nof her playing\non her childhood lawn—\n\nburned are all the documents, or eaten—\n\nthis ink,\nlike memory,\nan ancient unguent,\n\nenshrining what cannot be held\nof what went missing—the dog, her hat of hay,\n\none brother.                    She was in prism,\n\nyour mother says—and that’s how you will write her,\n\natoning her, just in fluorite a figurine caught\n\nto fracture                    her stolen years,\n                              her brother,\n\nall her once-upon-a-chimes.`,
-          bio: `Aria Aber was raised in Germany, where she was born to Afghan refugees, and is based in Oakland, California. She is the author of Hard Damage (University of Nebraska Press, 2019) and is currently a Stegner Fellow in Poetry at Stanford University.`
+          bio: `Aria Aber was raised in Germany, where she was born to Afghan refugees, and is based in Oakland, California. She is the author of Hard Damage (University of Nebraska Press, 2019) and is currently a Stegner Fellow in Poetry at Stanford University.`,
+          next: "hua-xi"
         }
-      ]
+      }
     };
 
-    const workMap = Object.fromEntries(site.works.map(work => [work.slug, work]));
     const app = document.getElementById('app');
-
-    function getNextSlug(slug) {
-      const index = site.works.findIndex(work => work.slug === slug);
-      if (index === -1) return site.current;
-      const nextIndex = (index + 1) % site.works.length;
-      return site.works[nextIndex].slug;
-    }
 
     function route() {
       const hash = window.location.hash.replace('#', '') || 'home';
       render(hash);
+      app.scrollTop = 0;
     }
 
     function chrome(leftHtml) {
@@ -314,7 +351,7 @@
           <div>${leftHtml}</div>
           <div class="brand-wrap">
             <a class="star-link" href="#home" aria-label="Home">✦</a>
-            <a class="brand" href="#home">${site.title}</a>
+            <a class="brand" href="#home">${content.title}</a>
           </div>
         </header>
       `;
@@ -335,13 +372,9 @@
       `;
     }
 
-    function renderWork(slug) {
-      const work = workMap[slug];
+    function renderWork(key) {
+      const work = content.works[key];
       if (!work) return renderHome();
-
-      const epigraphHtml = work.epigraph
-        ? `<div class="epigraph small">${work.epigraph}</div>`
-        : '';
 
       app.innerHTML = `
         <section>
@@ -350,31 +383,26 @@
           `)}
           <div class="work-header-space"></div>
           <h1 class="work-title">${work.title}</h1>
-          ${epigraphHtml}
+          ${work.epigraph ? `<div class="epigraph small">${work.epigraph}</div>` : ``}
           <pre class="poem">${work.text}</pre>
           <div class="bio">${work.bio}</div>
           <div class="work-bottom">
-            <a class="work-nav" href="#${getNextSlug(slug)}" aria-label="Next work">→</a>
+            <a class="work-nav" href="#${work.next}" aria-label="Next work">→</a>
           </div>
         </section>
       `;
     }
 
     function renderArchive() {
-      const groups = site.archive.map(group => {
-        const items = group.works
-          .map(slug => workMap[slug])
-          .filter(Boolean)
-          .map(work => `<a class="archive-link" href="#${work.slug}">${work.author}</a>`)
-          .join('');
-
-        return `
-          <div class="archive-group">
-            <div class="archive-season">${group.season}</div>
-            ${items}
-          </div>
-        `;
-      }).join('');
+      const groups = content.archive.map(group => `
+        <div class="archive-group">
+          <div class="archive-copy">${group.season}</div>
+          ${group.items.map(slug => {
+            const work = content.works[slug];
+            return `<a class="archive-link archive-copy" href="#${slug}">${work.author}</a>`;
+          }).join('')}
+        </div>
+      `).join('');
 
       app.innerHTML = `
         <section>
@@ -393,8 +421,8 @@
             <div class="heading">Masthead</div>
           `)}
           <div class="masthead-block">
-            <div class="masthead-copy">${site.about}</div>
-            <div class="masthead-copy">${site.editors}</div>
+            <div class="masthead-copy">${content.about}</div>
+            <div class="masthead-copy">${content.editors}</div>
           </div>
         </section>
       `;
@@ -407,7 +435,7 @@
             <div class="heading">Submissions</div>
           `)}
           <div class="submission-block">
-            <div class="submission-copy">${site.submissions}</div>
+            <div class="submission-copy">${content.submissions}</div>
           </div>
         </section>
       `;
@@ -415,11 +443,11 @@
 
     function render(hash) {
       if (hash === 'home') return renderHome();
-      if (hash === 'current') return renderWork(site.current);
+      if (hash === 'current') return renderWork(content.current);
       if (hash === 'archive') return renderArchive();
       if (hash === 'masthead') return renderMasthead();
       if (hash === 'submissions') return renderSubmissions();
-      if (workMap[hash]) return renderWork(hash);
+      if (content.works[hash]) return renderWork(hash);
       renderHome();
     }
 
